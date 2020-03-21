@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resistivity measurement</title>
+    <link href="mycss.css" type="text/css" rel="stylesheet">
+</head>
+<body onload="draw();">
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="js/Three.js"></script>
+<script src="js/dat.gui.min.js"></script>
+<script src="js/OrbitControls.js"></script>
+<script src="js/Detector.js"></script>
+<script src="js/Stats.js"></script>
+<script src="js/THREEx.KeyboardState.js"></script>
+<script src="js/THREEx.FullScreen.js"></script>
+<script src="js/THREEx.WindowResize.js"></script>
+<script src="https://johnson2heng.github.io/three.js-demo/lib/threebsp.js"></script>
+<div id="top">
+    <div id="topleft"></div>
+    <div id="topcontent">
+        <p id="top_p">Resistivity measurement</p>
+    </div>
+    <div id="topright">
+        <table id="toptable">
+            <tr>
+                <td class="toptd">| <a href="#">Instruction</a> |</td>
+                <td class="toptd"><a href="#">About us</a> |</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div id="display_div">
+</div>
+
+<div id="divright">
+    <div id="divpara">
+        <div id="divshape">
+            <form style="margin: 0px; padding: 0px">
+                <h3 style="padding: 10px">Shape selection</h3>
+                <select style="background-color: #BBB;font-size: 120%;margin: 0px" onchange="switchItem()"
+                        id="type_select">
+                    <option value="Type1">Type 1: cube</option>
+                    <option value="Type2">Type 2: disk with one orientation flat</option>
+                    <option value="Type3">Type 3: disk with two orientation flats</option>
+                    <option value="Type4">Type 4: disk with notch</option>
+                </select>
+            </form>
+            <div id="type1">
+                <table class="type_table">
+                    <tr>
+                        <td class="type1td"><a href="#" onmouseover="display_type1_length()"
+                                               onmouseout="vanish_type1_length()" onmousemove="display_type1_length()">Length:</a>
+                        </td>
+                        <td class="type1td"><input type="text" id="type1length" list="t1list_length" value="8"></td>
+                        <datalist id="t1list_length">
+                                <option value="18">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type1td"><a href="#" onmouseover="display_type1_width()"
+                                               onmouseout="vanish_type1_width()" onmousemove="display_type1_width()">Width:</a>
+                        </td>
+                        <td class="type1td"><input type="text" id="type1width" list="t1list_width" value="5"></td>
+                        <datalist id="t1list_width">
+                                <option value="12">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type1td"><a href="#" onmouseover="display_type1_height()"
+                                               onmouseout="vanish_type1_height()" onmousemove="display_type1_height()">Height:</a>
+                        </td>
+                        <td class="type1td"><input type="text" id="type1height" list="t1list_height" value="0.1"></td>
+                        <datalist id="t1list_height">
+                                <option value="0.2">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="type2">
+                <table class="type_table">
+                    <tr>
+                        <td class="type2td"><a href="#" onmouseover="display_type2_R()" onmouseout="vanish_type2_R()"
+                                               onmousemove="display_type2_R()">R:</a></td>
+                        <td class="type2td"><input type="text" id="type2R" list="t2list_R" value="5"></td>
+                        <datalist id="t2list_R">
+                                <option value="12">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type2td"><a href="#" onmouseover="display_type2_L()" onmouseout="vanish_type2_L()"
+                                               onmousemove="display_type2_L()">L:</a></td>
+                        <td class="type2td"><input type="text" id="type2L" list="t2list_L" value="0.5"></td>
+                        <datalist id="t2list_L">
+                                <option value="5">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type2td"><a href="#" onmouseover="display_type2_t()" onmouseout="vanish_type2_t()"
+                                               onmousemove="display_type2_t()">t:</a></td>
+                        <td class="type2td"><input type="text" id="type2t" list="t2list_t" value="0.1"></td>
+                        <datalist id="t2list_t">
+                                <option value="0.2">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="type3">
+                <table class="type_table">
+                    <tr>
+                        <td class="type3td"><a href="#" onmouseover="type3R_D()" onmouseout="type3R_V()"
+                                               onmousemove="type3R_D()">R:</a></td>
+                        <td class="type3td"><input type="text" id="type3R" list="t3list_R" value="5"></td>
+                        <datalist id="t3list_R">
+                                <option value="12">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type3td"><a href="#" onmouseover="type3L1_D()" onmouseout="type3L1_V()"
+                                               onmousemove="type3L1_D()">L1:</a></td>
+                        <td class="type3td"><input type="text" id="type3L1" list="t3list_L1" value="0.5"></td>
+                        <datalist id="t3list_L1">
+                                <option value="8">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type3td"><a href="#" onmouseover="type3L2_D()" onmouseout="type3L2_V()"
+                                               onmousemove="type3L2_D()">L2:</a></td>
+                        <td class="type3td"><input type="text" id="type3L2" list="t3list_L2" value="0.5"></td>
+                        <datalist id="t3list_L2">
+                                <option value="8">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type3td"><a href="#" onmouseover="type3t_D()" onmouseout="type3t_V()"
+                                               onmousemove="type3t_D()">t:</a></td>
+                        <td class="type3td"><input type="text" id="type3t" list="t3list_t" value="0.1"></td>
+                        <datalist id="t3list_t">
+                                <option value="0.2">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="type4">
+                <table class="type_table">
+                    <tr>
+                        <td class="type4td"><a href="#" onmouseover="type4R_D()" onmouseout="type4R_V()"
+                                               onmousemove="type4R_D()">R:</a></td>
+                        <td class="type4td"><input type="text" id="type4R" list="t4list_R" value="5"></td>
+                        <datalist id="t4list_R">
+                                <option value="10">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type4td"><a href="#" onmouseover="type4L_D()" onmouseout="type4L_V()"
+                                               onmousemove="type4L_D()">L:</a></td>
+                        <td class="type4td"><input type="text" id="type4L" list="t4list_L" value="0.15"></td>
+                        <datalist id="t4list_L">
+                                <option value="0.5">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type4td"><a href="#" onmouseover="type4D_D()" onmouseout="type4D_V()"
+                                               onmousemove="type4D_D()">D:</a></td>
+                        <td class="type4td"><input type="text" id="type4D" list="t4list_D" value="0.3"></td>
+                        <datalist id="t4list_D">
+                                <option value="0.2">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                    <tr>
+                        <td class="type4td"><a href="#" onmouseover="type4t_D()" onmouseout="type4t_V()"
+                                               onmousemove="type4t_D()">t:</a></td>
+                        <td class="type4td"><input type="text" id="type4t" list="t4list_t" value="0.1"></td>
+                        <datalist id="t4list_t">
+                                <option value="0.2">
+                        </datalist>
+                        <td>cm</td>
+                    </tr>
+                </table>
+            </div>
+            <div style="clear: both"></div>
+        </div>
+        <div align="center" class="div_confirm" id="typeshape_btn">
+            <input type="button" onclick="addtype()" class="btn" value="Confirm">
+        </div>
+        <div id="divchoosepoint">
+            <h3 style="padding: 5px">Measure position</h3>
+            <table id="addpointtable">
+                <tr>
+                    <td class="addpointtd"><a href="#" onmouseover="x_show()" onmouseout="x_van()"
+                                              onmousemove="x_show()">x:</a></td>
+                    <!--<td class="addpointtd"><a href="#" onmouseover="displayImg()" onmouseout="vanishImg()" onmousemove="displayImg()">x:</a></td>-->
+                    <td class="addpointtd"><input type="text" id="x" value="0"></td>
+                    <td>cm</td>
+                </tr>
+                <tr>
+                    <td class="addpointtd"><a href="#" onmouseover="y_show()" onmouseout="y_van()"
+                                              onmousemove="y_show()">y:</a></td>
+                    <td class="addpointtd"><input type="text" id="y" value="0"></td>
+                    <td>cm</td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td class="addpointtd"><a href="#" onmouseover="theta_show()" onmouseout="theta_van()"-->
+                                              <!--onmousemove="theta_show()">theta:</a></td>-->
+                    <!--<td class="addpointtd"><input type="text" id="theta"></td>-->
+                    <!--<td>arc</td>-->
+                <!--</tr>-->
+                <tr>
+                    <td class="addpointtd"><p title="Potential difference between  B and C">value:</p></td>
+                    <td class="addpointtd"><input type="text" id="value"></td>
+                    <td>V</td>
+                </tr>
+                <tr>
+                    <td class="addpointtd"><p title="Distance between  B and C">dis:</p></td>
+                    <td class="addpointtd"><input type="text" id="dis" value="0.1"></td>
+                    <td>cm</td>
+                </tr>
+            </table>
+        </div>
+        <div align="center" class="div_confirm" id="choose_point_btn">
+            <input type="button" class="btn" value="Confirm" id="measure_point">
+        </div>
+        <div id="divprecision">
+            <div id="precision_caption">
+                <h3 style="padding: 10px">Mesh and FEM</h3>
+            </div>
+            <div id="precision_left">
+                <table id="setprecision">
+                    <tr>
+                    <td class="addpointtd"><a href="#" onmouseover="theta_show()" onmouseout="theta_van()"
+                    onmousemove="theta_show()">theta:</a></td>
+                    <td class="addpointtd"><input type="text" id="theta" value="0"></td>
+                    <td>arc</td>
+                    </tr>
+                    <tr>
+                        <td class="setprecisiontd"><p title="The parameter of mesh">h:</p></td>
+                        <td class="setprecisiontd"><input type="text" class="setprecisioninput"></td>
+                    </tr>
+                    <tr>
+                        <td class="setprecisiontd">order</td>
+                        <td class="setprecisiontd">
+                            <select style="background-color: #BBB; width: 100px">
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp1</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp2</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp3</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp4</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp5</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp6</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp7</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp8</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp9</option>
+                                <option>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp10</option>
+                            </select>
+                        </td>
+                        <td class="setprecisiontd"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="precision_right">
+                <button id="start_btn" onclick="senddata()">Start</button>
+            </div>
+        </div>
+    </div>
+    <div style="clear: both"></div>
+</div>
+<div id="image_type1_length">
+    <img src="img/type1length.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type1_width">
+    <img src="img/type1width.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type1_height">
+    <img src="img/type1height.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type2_R">
+    <img src="img/type2R.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type2_L">
+    <img src="img/type2L.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type2_t">
+    <img src="img/type2t.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type3_R">
+    <img src="img/type3R.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type3_L1">
+    <img src="img/type3L1.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type3_L2">
+    <img src="img/type3L2.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type3_t">
+    <img src="img/type3t.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type4_R">
+    <img src="img/type4R.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type4_L">
+    <img src="img/type4L.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type4_D">
+    <img src="img/type4D.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_type4_t">
+    <img src="img/type4t.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_x">
+    <img src="img/x.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_y">
+    <img src="img/y.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<div id="image_theta">
+    <img src="img/theta.jpg" alt=""><!--如果加上AJAX就可以根据不同的超链接来显示不同的图片了-->
+</div>
+<script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>3D mesh viewer</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link href="mycss.css" type="text/css" rel="stylesheet">
+    <style>
+        #info {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            text-align: center;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            pointer-events: none;
+            z-index: 1;
+            /* TODO Solve this in HTML */
+        }
+
+        #form {
+            position: absolute;
+            top: 30px;
+            width: 100%;
+            z-index: 1;
+
+        }
+
+        #form2 {
+            position: absolute;
+            top: 60px;
+            width: 100%;
+            z-index: 1;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info">
+        3D mesh viewer
+    </div>
+    <div id="form">
+        <label>Vertex data</label>
+        <input type="file" onchange="handleFiles1(this.files)" accept=".dat">
+    </div>
+    <div id="form2">
+        <label>Face data</label>
+        <input type="file" onchange="handleFiles2(this.files)" accept=".dat">
+    </div>
+
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/Three.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/Detector.js"></script>
+    <script src="js/Stats.js"></script>
+    <script src="js/THREEx.KeyboardState.js"></script>
+    <script src="js/THREEx.FullScreen.js"></script>
+    <script src="js/THREEx.WindowResize.js"></script>
+    <script src="https://johnson2heng.github.io/three.js-demo/lib/threebsp.js"></script>
+
+    <script type="text/javascript">
+
+        var meshdata;
+        var scale = 10;
+        var flag;
+        var scene, camera, renderer, controls;
+        var facelist = [];
+        var verticelist = [];
+        facelist.push({ i: 1, j: 2, k: 3 });
+        verticelist.push({ x: 0, y: 0, z: 0 });
+        verticelist.push({ x: 100, y: 0, z: 0 });
+        verticelist.push({ x: 0, y: 200, z: 0 });
+        init();
+        animate();
+        function init() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
+            scene.add(camera);
+            camera.position.set(0, 400, 0);
+            camera.lookAt(0, 0, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+
+            renderer.setSize(window.innerWidth, window.innerHeight);
+
+            renderer.domElement.style.position = 'absolute';
+            renderer.domElement.style.top = 0;
+            document.body.appendChild(renderer.domElement);
+
+            // EVENTS
+            THREEx.WindowResize(renderer, camera);
+            THREEx.FullScreen.bindKey({ charCode: 'm'.charCodeAt(0) });
+            // CONTROLS
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            // STATS
+            // LIGHT
+            var light = new THREE.PointLight(0xffffff);
+            light.position.set(100, 250, 100);
+            scene.add(light);
+            // SKYBOX
+            var skyBoxGeometry = new THREE.CubeGeometry(10000, 10000, 10000);
+            var skyBoxMaterial = new THREE.MeshBasicMaterial({ color: 0x87CEFA, side: THREE.BackSide });
+            var skyBox = new THREE.Mesh(skyBoxGeometry, skyBoxMaterial);
+            scene.add(skyBox);
+            //辅助的坐标系长度
+            var r = 100;
+
+            var axis = new THREE.AxisHelper(r * 1.5);
+            axis.material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+            scene.add(axis);
+
+            //添加网格辅助工具
+            var size = 150;
+            var divisions = 20;
+
+            gridHelper = new THREE.GridHelper(size, divisions);
+            gridHelper.position.set(0, -10, 0);
+            scene.add(gridHelper);
+
+
+            // var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, wireframeLinewidth: 1, side: THREE.DoubleSide })
+
+            // //create a triangular geometry
+            // var geometry = new THREE.Geometry();
+            // geometry.vertices.push(new THREE.Vector3(-50, -50, 0));
+            // geometry.vertices.push(new THREE.Vector3(50, -50, 0));
+            // geometry.vertices.push(new THREE.Vector3(50, 50, 0));
+
+            // //create a new face using vertices 0, 1, 2
+            // var normal = new THREE.Vector3(0, 0, 1); //optional
+            // var color = new THREE.Color(0xffaa00); //optional
+            // var materialIndex = 0; //optional
+            // var face = new THREE.Face3(0, 1, 2, normal, color, materialIndex);
+
+            // //add the face to the geometry's faces array
+            // geometry.faces.push(face);
+
+            // //the face normals and vertex normals can be calculated automatically if not supplied above
+            // geometry.computeFaceNormals();
+            // geometry.computeVertexNormals();
+
+            // scene.add(new THREE.Mesh(geometry, material));
+        }
+        function animate() {
+
+            requestAnimationFrame(animate);
+            update();
+            renderer.render(scene, camera);
+
+
+        }
+        function update() {
+            controls.update();
+            // stats.update();
+        }
+        function confirm() {
+            var filename = document.getElementById("file").value;
+            alert(filename);
+        }
+        function handleFiles1(files) {
+            if (window.FileReader) {
+                getAsText1(files[0]);
+
+            } else {
+                alert("FileReader are not supported in this browser");
+            }
+        }
+
+        function getAsText1(fileToRead) {
+            var reader = new FileReader();
+            reader.readAsText(fileToRead);
+            reader.onload = loadHandler1;
+            reader.onerror = errorHandler;
+        }
+
+        function loadHandler1(event) {
+            var alldata = event.target.result;
+            processData1(alldata);
+        }
+
+        function processData1(dat) {
+            var allTextLines = dat.split(/\r\n|\n/)
+            meshdata = new THREE.Geometry();
+            for (var i = 0; i < allTextLines.length; i++) {
+                var data = allTextLines[i].split('\t');
+                var tarr = [];
+                // for (var j = 0; j < data.length; j++) {
+                //     tarr.push(parseFloat(data[j]));
+                // }
+                if(isNaN(data[0]) || isNaN(data[1]) || isNaN(data[2])){
+                    continue;
+                }
+                var vec = new THREE.Vector3(parseFloat(data[0]) * scale,
+                    parseFloat(data[2]) * scale,
+                    parseFloat(data[1]) * scale);
+                console.log(vec);
+                meshdata.vertices.push(vec);
+
+            }
+        }
+
+
+        function handleFiles2(files) {
+            if (window.FileReader) {
+                getAsText2(files[0]);
+
+            } else {
+                alert("FileReader are not supported in this browser");
+            }
+        }
+
+        function getAsText2(fileToRead) {
+            var reader = new FileReader();
+            reader.readAsText(fileToRead);
+            reader.onload = loadHandler2;
+            reader.onerror = errorHandler;
+        }
+
+        function loadHandler2(event) {
+            var alldata = event.target.result;
+            processData2(alldata);
+        }
+
+        function processData2(dat) {
+            var allTextLines = dat.split(/\r\n|\n/)
+            var lines = []
+            for (var i = 0; i < allTextLines.length; i++) {
+                var data = allTextLines[i].split('\t');
+                var tarr = [];
+                // for (var j = 0; j < data.length; j++) {
+                //     tarr.push(parseFloat(data[j]));
+                // }
+                if(isNaN(data[0]) || isNaN(data[1]) || isNaN(data[2])){
+                    continue;
+                }
+                var face = new THREE.Face3(parseInt(data[0]),
+                    parseInt(data[1]),
+                    parseInt(data[2]));
+                console.log(face);
+                meshdata.faces.push(face);
+
+
+            }
+            //var face = new THREE.Face3(0, 1, 2);
+            //meshdata.faces.push(face);
+            var material = new THREE.MeshBasicMaterial({ color: 0x000000, wireframe: true, wireframeLinewidth: 1, side: THREE.DoubleSide });
+            meshdata.computeFaceNormals();
+            meshdata.computeVertexNormals();
+
+            scene.add(new THREE.Mesh(meshdata, material));
+        }
+
+
+
+
+        function errorHandler(evt) {
+            if (evt.target.error.name == "NotReadableError") {
+                alert("Can not read file");
+            }
+        }
+    </script>
+    <script>
+    </script>
+</body>
+
+</html>

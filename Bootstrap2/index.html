@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en" id="all_content">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Title</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+
+
+    <script src="./js/Three.js"></script>
+    <script src="./js/dat.gui.min.js"></script>
+    <script src="./js/OrbitControls.js"></script>
+    <script src="./js/Detector.js"></script>
+    <script src="./js/Stats.js"></script>
+    <script src="./js/THREEx.KeyboardState.js"></script>
+    <script src="./js/THREEx.FullScreen.js"></script>
+    <script src="./js/THREEx.WindowResize.js"></script>
+    <script src="./js/jquery-3.3.1.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <style>
+        body{
+            background-color: #0c5460;
+        }
+    </style>
+</head>
+<body onload="mainload()" id="all">
+<div class="container" id="all_div">
+    <div class="row" style="    background: -webkit-linear-gradient(
+            left, #0099F7, #F11712
+    );">
+        <!--导航栏的左边-->
+        <div class="col-md-4">
+            <h5 class="page-item">  Liu lab, Niigata University</h5>
+        </div>
+        <!--标题-->
+        <div class="col-md-4" style="    background: -webkit-linear-gradient(
+            left, #4DA0B0, #D39D38
+    );">
+            <h3 style="text-align: center">Resistivity measurement</h3>
+        </div>
+        <!--导航栏右边空白区域-->
+        <div class="col-md-4" style="color:#EEEEEE">
+	GUI: Shao Wenbing, 2018/11~2019/02
+        </div>
+    </div>
+
+    <div class="row">
+        <!--左边的画图区域-->
+        <div class="col-md-9" style="background-color: #87CEFA" >
+            <!--存放画图区域-->
+            <div class="row"   style="height: 500px">
+                <!--左边显示网格的区域-->
+                <div class="col-md-8" id="threejs_div">
+
+                </div>
+                <!--右边显示说明图的区域-->
+                <div class="col-md-4" id="svg_div">
+
+                </div>
+            </div>
+            <!--结果展示的区域-->
+            <div class="row" id="result_display" style="background-color: silver; height: 200px">
+                <div class="col-md-12">
+
+                </div>
+            </div>
+        </div>
+        <!--右边的操控区域-->
+        <div class="col-md-3" style="background-color:#888">
+            <!--选择形状的模块-->
+            <div class="row" style="border-bottom: 1px solid #444444">
+                <div class="col-md-12">
+                    <!--标题-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 style="text-align: center">Shape selection</h5>
+                        </div>
+                    </div>
+                    <!--表单形状选择项-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <select class="form-control" onchange="switchItem()" id="shape_select" >
+                                        <option value="Type0">Type 0: cube</option>
+                                        <option value="Type1" selected="selected">Type 1: disk</option>
+                                        <option value="Type2">Type 2: disk with one orientation flat</option>
+                                        <option value="Type3">Type 3: disk with two orientation flat</option>
+                                        <option value="Type4">Type 4: disk with notch</option>
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--第0种表单-->
+                    <div class="row"  id="Type0" style="display: none">
+                        <div class="col-md-12">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">Length:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="8" id="t0_length" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">Width:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="5" id="t0_width" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">Height:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.1" id="t0_height" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--第一种表单-->
+                    <div class="row"  id="Type1">
+                        <div class="col-md-12">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">R:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="5" id="t1_R" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">t:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.1" id="t1_t" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--第二种表单-->
+                    <div class="row" style="display: none" id="Type2">
+                        <div class="col-md-12">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">R:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="5" id="t2_R" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">L:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="3" id="t2_L" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">t:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.1" id="t2_t" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!--第三种表单-->
+                    <div class="row" style="display: none" id="Type3">
+                        <div class="col-md-12">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">R:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="5" id="t3_R" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">L1:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="2" id="t3_L1" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">L2:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="3" id="t3_L2" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">t:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.1" id="t3_t" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--第四种表单-->
+                    <div class="row" style="display: none" id="Type4">
+                        <div class="col-md-12">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">R:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="5" id="t4_R" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">L:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.15" id="t4_L" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">D:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.3" id="t4_D" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">t:</div>
+                                        <div class="col-md-5">
+                                            <input class="form-control" type="text" value="0.1" id="t4_t" onchange="change_geo_by_text()">
+                                        </div>
+                                        <div class="col-3">cm</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!--按钮-->
+                </div>
+            </div>
+            <!--选择点的模块-->
+            <div class="row">
+                <div class="col-md-12">
+                    <!--标题-->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h5 style="text-align: center">Measure position</h5>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12" style="border-bottom: 1px #444 solid">
+                            <form class="form-row" role="form">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">x:</div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" value="0" id="x" onchange="change_point_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">y:</div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" value="0" id="y" onchange="change_point_by_text()">
+                                        </div>
+                                        <div class="col-md-3">cm</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">theta:</div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" value="0" id="theta" onchange="change_point_by_text()">
+                                        </div>
+                                        <div class="col-md-3">deg</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-md-4 text-center">h:</div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" value="0.1" id="h" onchange="change_point_by_text()">
+                                        </div>
+                                        <div class="col-md-3" >cm</div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--复选框-->
+            <div class="row">
+                <div class="col-md-4">
+                    <form class="form-inline">
+                        <div class="custom-checkbox">
+                            <label>
+                                <input type="checkbox" checked id="checkbox">View2D
+                            </label>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--提交按钮-->
+            <div class="row" style="margin: 15px auto">
+                <div class="col-md-4">
+
+                </div>
+                <div class="col-md-4">
+                    <form class="form-row" role="form">
+                        <div class="form-group">
+                            <button class="btn btn-info" id="btn_start" onclick="senddata()" type="button">Confirm</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-4">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="./js/main.js"></script>
+<div class="col-md-12" id="shape_type0" style="display: none">
+    <img src="./shapes/Type0.svg" width="100%">
+</div>
+
+<div class="col-md-12" id="shape_type1" style="display: none">
+    <img src="./shapes/Type1.svg" width="100%">
+</div>
+
+<div class="col-md-12" id="shape_type2" style="display: none">
+    <img src="./shapes/Type2.svg" width="100%">
+</div>
+<div class="col-md-12" id="shape_type3" style="display: none">
+    <img src="./shapes/Type3.svg" width="100%">
+</div>
+<div class="col-md-12" id="shape_type4" style="display: none">
+    <img src="./shapes/Type4.svg" width="100%">
+</div>
+
+</body>
+</html>

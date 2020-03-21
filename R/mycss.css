@@ -1,0 +1,483 @@
+* {
+    margin: 0px;
+    padding: 0px;
+}
+#top {
+    width: 100%;
+    height: 60px;
+    background: -webkit-linear-gradient(
+            left, #0099F7, #F11712
+    );
+}
+
+#topleft {
+    width: 25%;
+    height: 60px;
+    float: left;
+}
+
+#topright {
+    width: 25%;
+    height: 60px;
+    float: left;
+    text-align: right;
+}
+
+#topcontent {
+    width: 50%;
+    height: 60px;
+    margin: 0px auto;
+    background: -webkit-linear-gradient(
+            left, #4DA0B0, #D39D38
+    );
+    float: left;
+}
+
+#top_p {
+    text-align: center;
+    padding: 5px;
+    font-size: 30px;
+    color: transparent;
+
+    -webkit-text-stroke: 1px black;
+
+}
+
+a {
+    color: #F1F2B5;
+    text-decoration: none;
+}
+
+.toptd {
+    padding: 5px;
+}
+
+#toptable {
+    margin-top: 17px;
+    margin-left: 180px;
+}
+
+#display_div {
+    width: 80%;
+    height: 800px;
+    float:left;
+    margin:0px;
+    padding:0px;
+}
+
+#divright {
+    width: 20%;
+    height: 800px;
+    background-color: green;
+    margin:0px;
+    padding:0px;
+    float: left;
+}
+
+.div_confirm{
+    border-bottom: 1px #444 solid;
+    padding-bottom: 10px;
+}
+input {
+    width: 100px;
+    height: 25px;
+    margin: 5px;
+}
+
+#divpara {
+    width: 100%;
+    /*height: 800px;*/
+    flex: none;
+    background-color: #888;
+    margin: 0px;
+    padding: 0px;
+}
+
+#divshape {
+    width: 100%;
+    height: 250px;
+    text-align: center;
+
+}
+
+#divchoosepoint {
+    width: 100%;
+    height: 225px;
+    text-align: center;
+}
+
+#divprecision {
+    width: 100%;
+    text-align: center;
+}
+
+.shapetoptd {
+    width: 180px;
+    text-align: left;
+    font-size: 20px;
+    padding:5px;
+}
+
+
+
+#setprecision {
+    width: 100%;
+    padding-left: 30px;
+}
+
+#setprecisioncaption {
+    height: 30px;
+    border-bottom: 1px dashed #3344AA;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.setprecisiontd {
+    width: 150px;
+    height: 30px;
+    font-size: 20px;
+}
+
+#addpointtable {
+    width: 100%;
+}
+
+#addpointcaption {
+    height: 30px;
+    border-bottom: 1px dashed #3344AA;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.addpointtd {
+    width: 70px;
+    height: 30px;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.btn {
+    width: 270px; /* 宽度 */
+    height: 40px; /* 高度 */
+    margin-top: 10px;
+    border-width: 0px; /* 边框宽度 */
+    border-radius: 3px; /* 边框半径 */
+    background: #1E90FF; /* 背景颜色 */
+    cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+    outline: none; /* 不显示轮廓线 */
+    font-family: Microsoft YaHei; /* 设置字体 */
+    color: white; /* 字体颜色 */
+    font-size: 17px; /* 字体大小 */
+}
+
+.btn:hover {
+    background: #5599FF;
+}
+
+
+.setprecisioninput {
+    height: 25px;
+    margin: 5px;
+}
+
+#circletable {
+    width: 100%;
+}
+
+#rectangletable {
+    width: 100%;
+}
+
+#type1{
+    display: none;
+    text-align: center;
+}
+#type2{
+    display: none;
+    text-align: center;
+}
+
+#type3{
+    display: none;
+    text-align: center;
+}
+
+#type4{
+    display: none;
+    text-align: center;
+}
+.type_table{
+    width: auto;
+    padding: 15px;
+    padding-top: 20px;
+}
+.type1td{
+    width: 70px;
+    height: 30px;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+.type2td{
+    width: 70px;
+    height: 30px;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+.type3td{
+    width: 70px;
+    height: 20px;
+    padding: 1px;
+    text-align: center;
+    font-size: 20px;
+}
+.type4td{
+    width: 70px;
+    height: 20px;
+    padding: 1px;
+    text-align: center;
+    font-size: 20px;
+}
+#type_btn{
+    width: 270px; /* 宽度 */
+    height: 40px; /* 高度 */
+    margin-top: 10px;
+    border-width: 0px; /* 边框宽度 */
+    border-radius: 3px; /* 边框半径 */
+    background: #1E90FF; /* 背景颜色 */
+    cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+    outline: none; /* 不显示轮廓线 */
+    font-family: Microsoft YaHei; /* 设置字体 */
+    color: white; /* 字体颜色 */
+    font-size: 17px; /* 字体大小 */
+}
+
+#type_btn:hover {
+    background: #5599FF;
+}
+#addpointtable{
+    width: 200px;
+    padding-left: 20px;
+}
+.addpointtd{
+    width: 70px;
+    height: 25px;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+}
+#setprecision{
+    width: 150px;
+}
+#precision_caption{
+    width: 100%;
+}
+#precision_left{
+    width: 60%;
+    float: left;
+}
+#precision_right{
+    width: 40%;
+    float: left;
+    height: 150px;
+}
+#start_btn {
+    width: 80px; /* 宽度 */
+    height: 80px; /* 高度 */
+    margin-top: 38px;
+    border-width: 0px; /* 边框宽度 */
+    border-radius: 40px; /* 边框半径 */
+    background: #1E90FF; /* 背景颜色 */
+    cursor: pointer; /* 鼠标移入按钮范围时出现手势 */
+    outline: none; /* 不显示轮廓线 */
+    font-family: Microsoft YaHei; /* 设置字体 */
+    color: white; /* 字体颜色 */
+    font-size: 17px; /* 字体大小 */
+}
+
+#start_btn:hover {
+    background: #5599FF;
+}
+body{
+    position: relative;
+}
+img{
+    width:500px;
+    height: 284px;
+    border:black 1px solid;
+}
+#image_type1_length{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type1_width{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type1_height{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type2_R{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type2_L{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type2_t{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type3_R{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type3_L1{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type3_L2{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type3_t{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type4_R{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type4_L{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type4_D{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_type4_t{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_x{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_y{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+#image_theta{
+    position: absolute;
+    z-index: 999;
+    height: 286px;
+    width: 502px;
+    top: 20px;
+    right: 30px;
+    background-color: #F1F2B5;
+    display: none;
+}
+
+
+
